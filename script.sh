@@ -78,11 +78,15 @@ else
 python3 -m pip install --user pipx
 fi
 python3 -m pipx ensurepath || true
+fi
+# ensure pipx path (current + future shells)
+if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null; then
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+fi
 export PATH="$HOME/.local/bin:$PATH"
 hash -r
-fi
 
-# node (required by docs)
+# node
 
 if command_exists node; then
 echo "✅ Node already installed: $(node --version)"
@@ -112,15 +116,29 @@ fi
 
 echo "⬇️ Downloading FlintCLI..."
 
-curl -fL -o flintcli-3.1.0-py3-none-any.whl \
+curl -fL -o flintcli-3.1.0-py3-none-any.whl 
 "https://raw.githubusercontent.com/flint-lab/clisamplescript/main/flintcli-3.1.0-py3-none-any.whl"
 
+# verify downloa
+if [[ ! -s flintcli-3.1.0-py3-none-any.whl ]]; then
+echo "❌ Download failed."
+exit 1
+fi
+
 echo "📦 Installing FlintCLI via pipx..."
+pipx install --force flintcli-3.1.0-py3-none-any.whl
 
-export PATH="$HOME/.local/bin:$PATH"
-hash -r
+echo "🔍 Verifying FlintCLI..."
 
-pipx install --force ./flintcli-3.1.0-py3-none-any.whl
+if command -v flintcli >/dev/null 2>&1; then
+echo "✅ FlintCLI is ready"
+else
+echo ""
+echo "⚠️ FlintCLI installed but not in PATH yet."
+echo "👉 Please run:"
+echo "   export PATH="$HOME/.local/bin:$PATH""
+echo "   or open a new terminal."
+fi
 
 echo ""
 echo "🎉 FlintCLI installation complete!"
