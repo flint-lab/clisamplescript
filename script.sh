@@ -116,9 +116,8 @@ fi
 
 echo "⬇️ Downloading FlintCLI..."
 
-curl -fL -o flintcli-3.1.0-py3-none-any.whl 
+curl -fL -o flintcli-3.1.0-py3-none-any.whl \
 "https://raw.githubusercontent.com/flint-lab/clisamplescript/main/flintcli-3.1.0-py3-none-any.whl"
-
 # verify downloa
 if [[ ! -s flintcli-3.1.0-py3-none-any.whl ]]; then
 echo "❌ Download failed."
