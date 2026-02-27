@@ -112,8 +112,7 @@ fi
 
 echo "⬇️ Downloading FlintCLI..."
 
-curl -L -o flintcli-3.1.0-py3-none-any.whl 
-https://raw.githubusercontent.com/flint-lab/clisamplescript/main/flintcli-3.1.0-py3-none-any.whl
+curl -L -o flintcli-3.1.0-py3-none-any.whl https://raw.githubusercontent.com/flint-lab/clisamplescript/main/flintcli-3.1.0-py3-none-any.whl
 
 echo "📦 Installing FlintCLI via pipx..."
 
