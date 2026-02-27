@@ -140,6 +140,12 @@ echo "   or open a new terminal."
 fi
 
 echo ""
+echo "⚠️ IMPORTANT:"
+echo "If 'flintcli' command is not found, run:"
+echo '  export PATH="$HOME/.local/bin:$PATH"'
+echo "or simply open a new terminal."
+echo ""
+echo ""
 echo "🎉 FlintCLI installation complete!"
 echo ""
 echo "Run:"
