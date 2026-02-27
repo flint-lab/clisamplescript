@@ -125,7 +125,7 @@ exit 1
 fi
 
 echo "📦 Installing FlintCLI via pipx..."
-pipx install --force ./flintcli-3.1.0-py3-none-any.whl
+pipx install --force "$(pwd)/flintcli-3.1.0-py3-none-any.whl"
 
 echo "🔍 Verifying FlintCLI..."
 
