@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
-
-# worked on grafana vm
 set -euo pipefail
 
-echo "🚀 FlintCLI Prerequisite Installer (Linux)"
+echo "🚀 FlintCLI Full Installer"
 
 command_exists() {
 command -v "$1" >/dev/null 2>&1
-}
-
-version_ge() {
-printf '%s\n%s\n' "$2" "$1" | sort -C -V
 }
 
 detect_pkg_manager() {
@@ -49,6 +43,8 @@ fi
 detect_pkg_manager
 echo "✅ Package manager: $PKG_MANAGER"
 
+# curl
+
 if ! command_exists curl; then
 echo "📦 Installing curl..."
 install_packages curl
@@ -56,33 +52,28 @@ else
 echo "✅ curl already installed"
 fi
 
-PY_MIN="3.8.10"
-if command_exists python3; then
-PY_VER=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
-if version_ge "$PY_VER" "$PY_MIN"; then
-echo "✅ Python OK: $PY_VER"
-else
+# python
+
+if ! command_exists python3; then
 echo "📦 Installing Python..."
 install_packages python3
-fi
 else
-echo "📦 Installing Python..."
-install_packages python3
+echo "✅ Python present: $(python3 --version)"
 fi
+# pip
 
 if ! python3 -m pip --version >/dev/null 2>&1; then
 echo "📦 Installing python3-pip..."
 install_packages python3-pip
 fi
+# pipx
 
 if command_exists pipx; then
 echo "✅ pipx already installed"
 else
 echo "📦 Installing pipx..."
 if [[ "$PKG_MANAGER" == "apt" ]]; then
-if ! sudo apt-get install -y pipx >/dev/null 2>&1; then
-python3 -m pip install --user pipx --break-system-packages
-fi
+sudo apt-get install -y pipx || python3 -m pip install --user pipx --break-system-packages
 else
 python3 -m pip install --user pipx
 fi
@@ -90,6 +81,8 @@ python3 -m pipx ensurepath || true
 export PATH="$HOME/.local/bin:$PATH"
 hash -r
 fi
+
+# node (required by docs)
 
 if command_exists node; then
 echo "✅ Node already installed: $(node --version)"
@@ -104,6 +97,8 @@ install_packages nodejs
 fi
 fi
 
+# adb
+
 if command_exists adb; then
 echo "✅ ADB already installed"
 else
@@ -115,10 +110,22 @@ install_packages android-tools
 fi
 fi
 
+echo "⬇️ Downloading FlintCLI..."
+
+curl -L -o flintcli-3.1.0-py3-none-any.whl 
+https://raw.githubusercontent.com/flint-lab/clisamplescript/main/flintcli-3.1.0-py3-none-any.whl
+
+echo "📦 Installing FlintCLI via pipx..."
+
+export PATH="$HOME/.local/bin:$PATH"
+hash -r
+
+pipx install --force ./flintcli-3.1.0-py3-none-any.whl
+
 echo ""
-echo "🎉 Prerequisites ready"
-echo "Python : $(python3 --version 2>/dev/null || echo missing)"
-echo "pipx   : $(pipx --version 2>/dev/null || echo missing)"
-echo "Node   : $(node --version 2>/dev/null || echo missing)"
-echo "ADB    : $(adb version 2>/dev/null | head -n1 || echo missing)"
+echo "🎉 FlintCLI installation complete!"
+echo ""
+echo "Run:"
+echo "  flintcli version"
+echo "  flintcli auth --nat <your_token>"
 echo ""
